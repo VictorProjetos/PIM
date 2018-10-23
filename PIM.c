@@ -1,11 +1,11 @@
-#include<stdio.h>
-#include<stdlib.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <mysql.h>
 #include <locale.h>
 #include <stdlib.h>
 
 int main () {
 	setlocale(LC_ALL, "Portuguese");
-	
 	int opcao, i;
 	printf("Bem Vindo ! \n O que deseja fazer ? \n 1 - Se cadastrar \n 2 - Reservar um lugar \n");
 	scanf("%d",&opcao);
@@ -13,21 +13,63 @@ int main () {
 	// Cadastro
 	if (opcao == 1){
 		int tipoPessoa;
-		printf("Você é: \n 1 - Professor \n 2 - Aluno \n 3 - Convidado \n 4 - Portador de necessidade especial \n");
-		scanf("%d", &tipoPessoa);
+		printf("Você é: \n 1 - Professor \n 2 - Aluno \n 3 - Convidado \n 4 - Portador de necessidade especial \n 5 - sair \n");
+		scanf("%i", &tipoPessoa);
 		switch(tipoPessoa){
 			case 1: {
+				MYSQL conexao;
+				int res;
+				char query[100];
 				char nomeProfessor[31], rgProfessor[12], emailProfessor[65], carteirinhaProfessor[16], telefoneProfessor[21];
+				
 				printf("Informe seu nome completo: ");
-				scanf("%30s", &nomeProfessor);
+				scanf(" %[^\n]s", &nomeProfessor);
+				fflush(stdin);
+				
 				printf("Informe seu RG: ");
-				scanf("%9s", &rgProfessor);
+				scanf(" %s", &rgProfessor);
+				fflush(stdin);
+				
 				printf("Informe seu telefone com DDD: ");
-				scanf("%20s", &telefoneProfessor);
+				scanf(" %s", &telefoneProfessor);
+				fflush(stdin);
+				
 				printf("Informe seu E-mail: ");
-				scanf("%64s", &emailProfessor);
+				scanf(" %s", &emailProfessor);
+				fflush(stdin);
+				
 				printf("Carteirinha oficial de registro de professor: ");
-				scanf("%15s", &carteirinhaProfessor);
+				scanf(" %s", &carteirinhaProfessor);
+				fflush(stdin);
+		
+			//Inserir dados no banco//		
+			mysql_init(&conexao);
+			if ( mysql_real_connect(&conexao, "localhost", "root", "", "teatro", 0, NULL, 0) )
+			{
+			printf("conectado com sucesso!\n");
+	
+			sprintf(query,"call cadas_prof ('%s','%s','%s','%s','%s');", nomeProfessor, rgProfessor, emailProfessor, carteirinhaProfessor, telefoneProfessor);
+	
+			res = mysql_query(&conexao,query);
+			if (!res) printf("Registros inseridos %d\n", mysql_affected_rows(&conexao));
+			else printf("Erro na inserção %d : %s\n", mysql_errno(&conexao), mysql_error(&conexao));
+	
+	
+			mysql_close(&conexao);
+			}
+			else
+			{
+			printf("Falha de conexao\n");
+			printf("Erro %d : %s\n", mysql_errno(&conexao), mysql_error(&conexao));
+			}
+			
+			system("pause");
+			return(0);
+				
+				
+				
+				
+				
 				break;
 			}
 			case 2: {
