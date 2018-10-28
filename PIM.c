@@ -3,50 +3,80 @@
 #include <mysql.h>
 #include <locale.h>
 #include <stdlib.h>
+#include<conio.h>
+#define COL 7
+#define ROW 4
+#define FALSE 0
+#define TRUE 1
 
-int main () {
-	setlocale(LC_ALL, "Portuguese");
-	int opcao, i;
-	printf("Bem Vindo ! \n O que deseja fazer ? \n 1 - Se cadastrar \n 2 - Reservar um lugar \n");
-	scanf("%d",&opcao);
-	system("cls");
+void inicializa(char matriz[ROW][COL]);
+void mostrarPainel(char matriz[ROW][COL]);
+void reservar(char matriz[ROW][COL]);
+void legenda();
+int menuOpcao();
+int colunaY();
+int linhaX();
 
-	// Cadastro
-	if (opcao == 1){
-		int tipoPessoa, esco = 2;
-		printf("Você é: \n 1 - Professor \n 2 - Aluno \n 3 - Convidado \n 4 - Portador de necessidade especial \n 5 - sair \n");
-		scanf("%i", &tipoPessoa);
-		system("cls");
-		switch(tipoPessoa){
-			case 1: {
-				MYSQL conexao;
-				int res;
-				char query[100];
-				char nomeProfessor[31], rgProfessor[12], emailProfessor[65], carteirinhaProfessor[16], telefoneProfessor[21];
+//estrutura dos dados
+ struct dados {
+          char nome[30];
+          char bairro[30];
+          int regnum;
+   };
 
-                do{
-				printf("Informe seu nome completo: ");
-				scanf(" %[^\n]s", &nomeProfessor);
-				fflush(stdin);
+   struct dados cod[50];
+      int n=0;
 
-				printf("Informe seu RG: ");
-				scanf(" %s", &rgProfessor);
-				fflush(stdin);
+int main (void){
+  char matriz[ROW][COL];
+  int opcao;
+  int loopContinue=TRUE;
 
-				printf("Informe seu telefone com DDD: ");
-				scanf(" %s", &telefoneProfessor);
-				fflush(stdin);
+  inicializa(matriz); //Iniciliza a matriz com valores .(Livre)
 
-				printf("Informe seu E-mail: ");
-				scanf(" %s", &emailProfessor);
-				fflush(stdin);
+  do{
+     system("cls");//Limpa a tela
+     opcao=menuOpcao();
+     switch(opcao){
+        case 1:
+           {
+        int tipoPessoa, esco = 2;
+        printf("Você é: \n 1 - Professor \n 2 - Aluno \n 3 - Convidado \n 4 - Portador de necessidade especial \n 5 - sair \n");
+        scanf("%i", &tipoPessoa);
+        system("cls");
+        switch(tipoPessoa)
+        {
+        case 1:
+        {
+            MYSQL conexao;
+            int res;
+            char query[100];
+            char nomeProfessor[31], rgProfessor[12], emailProfessor[65], carteirinhaProfessor[16], telefoneProfessor[21];
 
-				printf("Carteirinha oficial de registro de professor: ");
-				scanf(" %s", &carteirinhaProfessor);
-				fflush(stdin);
-				system("cls");
+            do
+            {
+                printf("Informe seu nome completo: ");
+                scanf(" %[^\n]s", &nomeProfessor);
+                fflush(stdin);
 
-				printf("\n Nome: %s", &nomeProfessor);
+                printf("Informe seu RG: ");
+                scanf(" %s", &rgProfessor);
+                fflush(stdin);
+
+                printf("Informe seu telefone com DDD: ");
+                scanf(" %s", &telefoneProfessor);
+                fflush(stdin);
+
+                printf("Informe seu E-mail: ");
+                scanf(" %s", &emailProfessor);
+                fflush(stdin);
+
+                printf("Carteirinha oficial de registro de professor: ");
+                scanf(" %s", &carteirinhaProfessor);
+                fflush(stdin);
+                system("cls");
+
+                printf("\n Nome: %s", &nomeProfessor);
                 printf("\n RG: %s", &rgProfessor);
                 printf("\n Telefone:%s", &telefoneProfessor);
                 printf("\n Email: %s", &emailProfessor);
@@ -56,58 +86,63 @@ int main () {
                 scanf("%i",&esco);
                 system("cls");
 
-				} while (esco == 2);
+            }
+            while (esco == 2);
 
-			//Inserir dados no banco//
-			mysql_init(&conexao);
-			if ( mysql_real_connect(&conexao, "localhost", "root", "", "teatro", 0, NULL, 0) )
-			{
+            //Inserir dados no banco//
+            mysql_init(&conexao);
+            if ( mysql_real_connect(&conexao, "localhost", "root", "", "teatro", 0, NULL, 0) )
+            {
 
-			sprintf(query,"call cadas_prof ('%s','%s','%s','%s','%s');", nomeProfessor, rgProfessor, emailProfessor, carteirinhaProfessor, telefoneProfessor);
+                sprintf(query,"call cadas_prof ('%s','%s','%s','%s','%s');", nomeProfessor, rgProfessor, emailProfessor, carteirinhaProfessor, telefoneProfessor);
 
-			res = mysql_query(&conexao,query);
-			if (!res) printf("Cadastrado com sucesso!! \n");
-			else printf("Erro na inserção %d : %s\n", mysql_errno(&conexao), mysql_error(&conexao));
+                res = mysql_query(&conexao,query);
+                if (!res)
+                    printf("Cadastrado com sucesso!! \n");
+                else
+                    printf("Erro na inserção %d : %s\n", mysql_errno(&conexao), mysql_error(&conexao));
 
 
-			mysql_close(&conexao);
-			}
-			else
-			{
-			printf("Falha de conexao\n");
-			printf("Erro %d : %s\n", mysql_errno(&conexao), mysql_error(&conexao));
-			}
+                mysql_close(&conexao);
+            }
+            else
+            {
+                printf("Falha de conexao\n");
+                printf("Erro %d : %s\n", mysql_errno(&conexao), mysql_error(&conexao));
+            }
 
-			system("pause");
-			return(0);
+            system("pause");
+            return(0);
 
-				break;
-			}
-			case 2: {
-			    MYSQL conexao;
-				int res;
-				int esco = 2;
-				char query[100];
-				char nomeAluno[31], rgAluno[12], emailAluno[65], ra[16], telefoneAluno[21];
-				do{
-				printf("Informe seu nome completo: ");
-				scanf(" %[^\n]s", &nomeAluno);
-				fflush(stdin);
+            break;
+        }
+        case 2:
+        {
+            MYSQL conexao;
+            int res;
+            int esco = 2;
+            char query[100];
+            char nomeAluno[31], rgAluno[12], emailAluno[65], ra[16], telefoneAluno[21];
+            do
+            {
+                printf("Informe seu nome completo: ");
+                scanf(" %[^\n]s", &nomeAluno);
+                fflush(stdin);
 
-				printf("Informe seu RG: ");
-				scanf(" %s", &rgAluno);
-				fflush(stdin);
+                printf("Informe seu RG: ");
+                scanf(" %s", &rgAluno);
+                fflush(stdin);
 
-				printf("Informe seu telefone com DDD: ");
-				scanf(" %s", &telefoneAluno);
-				fflush(stdin);
+                printf("Informe seu telefone com DDD: ");
+                scanf(" %s", &telefoneAluno);
+                fflush(stdin);
 
-				printf("Informe seu E-mail: ");
-				scanf(" %s", &emailAluno);
-				fflush(stdin);
+                printf("Informe seu E-mail: ");
+                scanf(" %s", &emailAluno);
+                fflush(stdin);
 
-				printf("Informe seu RA: ");
-				scanf(" %s", &ra);
+                printf("Informe seu RA: ");
+                scanf(" %s", &ra);
                 fflush(stdin);
                 system("cls");
 
@@ -120,58 +155,62 @@ int main () {
                 printf(" \n As Informações acima estão corretas? \n \n 1 - sim\n 2 - não \n ");
                 scanf("%i",&esco);
                 system("cls");
-                }
-                while(esco == 2);
+            }
+            while(esco == 2);
 
-                //conexao com o banco //
-				mysql_init(&conexao);
-			if ( mysql_real_connect(&conexao, "localhost", "root", "", "teatro", 0, NULL, 0) )
-			{
+            //conexao com o banco //
+            mysql_init(&conexao);
+            if ( mysql_real_connect(&conexao, "localhost", "root", "", "teatro", 0, NULL, 0) )
+            {
 
-			sprintf(query,"call cadas_aluno ('%s','%s','%s','%s','%s');", nomeAluno, rgAluno, emailAluno, ra, telefoneAluno);
+                sprintf(query,"call cadas_aluno ('%s','%s','%s','%s','%s');", nomeAluno, rgAluno, emailAluno, ra, telefoneAluno);
 
-			res = mysql_query(&conexao,query);
-			if (!res) printf("Cadastrado com Sucesso!! \n");
-			else printf("Erro na inserção %d : %s\n", mysql_errno(&conexao), mysql_error(&conexao));
+                res = mysql_query(&conexao,query);
+                if (!res)
+                    printf("Cadastrado com Sucesso!! \n");
+                else
+                    printf("Erro na inserção %d : %s\n", mysql_errno(&conexao), mysql_error(&conexao));
 
 
-			mysql_close(&conexao);
-			}
-			else
-			{
-			printf("Falha de conexao\n");
-			printf("Erro %d : %s\n", mysql_errno(&conexao), mysql_error(&conexao));
-			}
+                mysql_close(&conexao);
+            }
+            else
+            {
+                printf("Falha de conexao\n");
+                printf("Erro %d : %s\n", mysql_errno(&conexao), mysql_error(&conexao));
+            }
 
-			system("pause");
-			return(0);
-				break;
-			}
-			case 3:{
-                MYSQL conexao;
-				int res, esco = 2;
-				char query[100];
-				char nomeConvidado[31], rgConvidado[12], emailConvidado[65], numeroConvite[16], telefoneConvidado[21];
+            system("pause");
+            return(0);
+            break;
+        }
+        case 3:
+        {
+            MYSQL conexao;
+            int res, esco = 2;
+            char query[100];
+            char nomeConvidado[31], rgConvidado[12], emailConvidado[65], numeroConvite[16], telefoneConvidado[21];
 
-                do{
-				printf("Informe seu nome completo: ");
-				scanf(" %[^\n]s", &nomeConvidado);
-				fflush(stdin);
+            do
+            {
+                printf("Informe seu nome completo: ");
+                scanf(" %[^\n]s", &nomeConvidado);
+                fflush(stdin);
 
-				printf("Informe seu RG: ");
-				scanf(" %s", &rgConvidado);
-				fflush(stdin);
+                printf("Informe seu RG: ");
+                scanf(" %s", &rgConvidado);
+                fflush(stdin);
 
-				printf("Informe seu telefone com DDD: ");
-				scanf(" %s", &telefoneConvidado);
-				fflush(stdin);
+                printf("Informe seu telefone com DDD: ");
+                scanf(" %s", &telefoneConvidado);
+                fflush(stdin);
 
-				printf("Informe seu E-mail: ");
-				scanf(" %s", &emailConvidado);
-				fflush(stdin);
+                printf("Informe seu E-mail: ");
+                scanf(" %s", &emailConvidado);
+                fflush(stdin);
 
-				printf("Informe o número do convite: ");
-				scanf(" %s", &numeroConvite);
+                printf("Informe o número do convite: ");
+                scanf(" %s", &numeroConvite);
                 fflush(stdin);
                 system("cls");
 
@@ -185,58 +224,63 @@ int main () {
                 scanf("%i",&esco);
                 system("cls");
 
-                }while(esco == 2);
-				    //conexao com o banco //
+            }
+            while(esco == 2);
+            //conexao com o banco //
 
             mysql_init(&conexao);
-			if ( mysql_real_connect(&conexao, "localhost", "root", "", "teatro", 0, NULL, 0) )
-			{
+            if ( mysql_real_connect(&conexao, "localhost", "root", "", "teatro", 0, NULL, 0) )
+            {
 
-			sprintf(query,"call cadas_convidado ('%s','%s','%s','%s','%s');", nomeConvidado, rgConvidado, emailConvidado, numeroConvite, telefoneConvidado);
+                sprintf(query,"call cadas_convidado ('%s','%s','%s','%s','%s');", nomeConvidado, rgConvidado, emailConvidado, numeroConvite, telefoneConvidado);
 
-			res = mysql_query(&conexao,query);
-			if (!res) printf("Cadastrado com Sucesso!! \n");
-			else printf("Erro na inserção %d : %s\n", mysql_errno(&conexao), mysql_error(&conexao));
+                res = mysql_query(&conexao,query);
+                if (!res)
+                    printf("Cadastrado com Sucesso!! \n");
+                else
+                    printf("Erro na inserção %d : %s\n", mysql_errno(&conexao), mysql_error(&conexao));
 
 
-			mysql_close(&conexao);
-			}
-			else
-			{
-			printf("Falha de conexao\n");
-			printf("Erro %d : %s\n", mysql_errno(&conexao), mysql_error(&conexao));
-			}
+                mysql_close(&conexao);
+            }
+            else
+            {
+                printf("Falha de conexao\n");
+                printf("Erro %d : %s\n", mysql_errno(&conexao), mysql_error(&conexao));
+            }
 
-			system("pause");
-			return(0);
-				break;
-				break;
-			}
-			case 4:{
-			    MYSQL conexao;
-				int res, esco = 2;
-				char query[100];
-				char nomePessoa[31], rgPessoa[12], emailPessoa[65], numeroPd[16], telefonePessoa[21];
+            system("pause");
+            return(0);
+            break;
+            break;
+        }
+        case 4:
+        {
+            MYSQL conexao;
+            int res, esco = 2;
+            char query[100];
+            char nomePessoa[31], rgPessoa[12], emailPessoa[65], numeroPd[16], telefonePessoa[21];
 
-                do{
-				printf("Informe seu nome completo: ");
-				scanf(" %[^\n]s", &nomePessoa);
-				fflush(stdin);
+            do
+            {
+                printf("Informe seu nome completo: ");
+                scanf(" %[^\n]s", &nomePessoa);
+                fflush(stdin);
 
-				printf("Informe seu RG: ");
-				scanf(" %s", &rgPessoa);
-				fflush(stdin);
+                printf("Informe seu RG: ");
+                scanf(" %s", &rgPessoa);
+                fflush(stdin);
 
-				printf("Informe seu telefone com DDD: ");
-				scanf(" %s", &telefonePessoa);
-				fflush(stdin);
+                printf("Informe seu telefone com DDD: ");
+                scanf(" %s", &telefonePessoa);
+                fflush(stdin);
 
-				printf("Informe seu E-mail: ");
-				scanf(" %s", &emailPessoa);
-				fflush(stdin);
+                printf("Informe seu E-mail: ");
+                scanf(" %s", &emailPessoa);
+                fflush(stdin);
 
-				printf("Número da carteirinha PD: ");
-				scanf(" %s", &numeroPd);
+                printf("Número da carteirinha PD: ");
+                scanf(" %s", &numeroPd);
                 fflush(stdin);
 
                 system("cls");
@@ -249,33 +293,153 @@ int main () {
                 printf(" \n As Informações acima estão corretas? \n \n 1 - sim\n 2 - não \n");
                 scanf("%i",&esco);
                 system("cls");
-                }while(esco == 2);
-			// -------- Conexão -------- //
+            }
+            while(esco == 2);
+            // -------- Conexão -------- //
             mysql_init(&conexao);
-			if ( mysql_real_connect(&conexao, "localhost", "root", "", "teatro", 0, NULL, 0) )
-			{
+            if ( mysql_real_connect(&conexao, "localhost", "root", "", "teatro", 0, NULL, 0) )
+            {
 
-			sprintf(query,"call cadas_pne ('%s','%s','%s','%s','%s');", nomePessoa, rgPessoa, telefonePessoa, emailPessoa, numeroPd);
+                sprintf(query,"call cadas_pne ('%s','%s','%s','%s','%s');", nomePessoa, rgPessoa, telefonePessoa, emailPessoa, numeroPd);
 
-			res = mysql_query(&conexao,query);
-			if (!res) printf("Cadastrado com Sucesso!! \n");
-			else printf("Erro na inserção %d : %s\n", mysql_errno(&conexao), mysql_error(&conexao));
+                res = mysql_query(&conexao,query);
+                if (!res)
+                    printf("Cadastrado com Sucesso!! \n");
+                else
+                    printf("Erro na inserção %d : %s\n", mysql_errno(&conexao), mysql_error(&conexao));
 
 
-			mysql_close(&conexao);
-			}
-			else
-			{
-			printf("Falha de conexao\n");
-			printf("Erro %d : %s\n", mysql_errno(&conexao), mysql_error(&conexao));
-			}
+                mysql_close(&conexao);
+            }
+            else
+            {
+                printf("Falha de conexao\n");
+                printf("Erro %d : %s\n", mysql_errno(&conexao), mysql_error(&conexao));
+            }
 
-			system("pause");
-			return(0);
+            system("pause");
+            return(0);
 
-				break;
-			}
+            break;
+        }
 
-		}
-	}
+        }
+  break;}
+
+          break;
+
+        case 2:
+          system("cls");
+          system("cls");
+          mostrarPainel(matriz);
+          reservar(matriz); //Realiza a reserva de uma cadeira no painel, marcando c/ um R
+          break;
+
+        case 3:
+          system("cls");
+          mostrarPainel(matriz);
+          getch();
+          break;
+
+        case 4:
+          loopContinue = FALSE; //condicao para saída do programa
+     }
+  }while(loopContinue);
+
+  getchar();
+  return 0;
+}
+void inicializa(char matriz[ROW][COL]){
+     int i,j;
+     for(i=1;i<=ROW;i++)
+       for(j=1;j<=COL;j++)
+          matriz[i][j] = '.';
+}
+
+void mostrarPainel(char matriz[ROW][COL]){
+
+  int i,j;
+  printf("\n\n         %c   PAINEL DE OCUPACOES   %c\n\n",16,17);
+  printf("          ");
+
+  for(i=1;i<=COL;i++)
+    printf("%d     ",i);
+
+  for(i=1;i<=ROW;i++){
+     printf("\n\n     %d",i);
+     for(j=1;j<=COL;j++)
+       printf("   (%c)",matriz[i][j]);
+  }
+  //apresenta o menu na tela
+  legenda();
+}
+
+int menuOpcao(){
+    int opcao=4;
+    do {
+         system("cls");
+         printf("\n\n                    %c  MENU  %c\n\n",16,17);
+
+         printf("                %c  1- Cadastro        %c\n",16,17);
+
+         printf("                %c  2- Reservar       %c\n",16,17);
+
+         printf("                %c  3- Exit           %c\n\n",16,17);
+
+         printf("                   opcao: ");scanf("%d",&opcao);
+
+         if(opcao <= 0 || opcao > 4){
+            printf("\n\n\n    DIGITE APENAS VALORES CORESPONDENTES AO MENU !!");
+            getch();
+         }
+
+     }while(opcao <= 0 || opcao > 4);
+
+    return opcao;
+}
+//apresenta  a legenda na tela
+void legenda(){
+   printf("\n\n\n        .-Livre  X-Ocupado  R-Reservado\n\n");
+
+}
+    //efetica a compra da cadeira
+
+//reserva a cadeira no teatro
+void reservar(char matriz[ROW][COL]){
+   int row, col;
+    printf("\n\n         RESERVA DE CADEIRAS\n\n");
+   row = linhaX();
+   col = colunaY();
+
+   if(matriz[row][col]=='.'){
+       matriz[row][col] = 'R';
+       printf("\n\n      RESERVA EFETIVADA COM SUCESSO !!");
+   }
+   else if (matriz[row][col]=='X')
+             printf("\n\n      CADEIRA JA OCUPADA!! ESCOLHA OUTRA !!\n\n");
+        else if(matriz[row][col]=='R')
+               printf("\n\n      CADEIRA JA RESERVADA !! ESCOLHA OUTRA !!\n\n");
+
+    getch();
+
+}
+//ler a linha oferecida pelo usuario
+int linhaX(){
+   int row;
+   printf("          Linha: "); scanf("%d",&row);
+     if(row>4)
+     {
+       printf("\t\n Esta cadeira nao existe!!! ");
+       }
+   return row;
+}
+//ler a coluna oferecida pelo usuario
+int colunaY(){
+   int col;
+   printf("          Coluna: "); scanf("%d",&col);
+   if(col>7)
+     {
+       printf("\t\n Esta cadeira nao existe!!! ");
+       }
+   return col;
 }
