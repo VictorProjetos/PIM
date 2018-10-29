@@ -286,7 +286,7 @@ int main (void){
                 if (tipoPessoa == 1 || tipoPessoa == 2 ){
                     mostrarPainelProf(matriz);
                     reservarProfessores(matriz); //Realiza a reserva de uma cadeira no painel, marcando c/ um R
-                } if (tipoPessoa == 3){
+                } if (tipoPessoa == 3 || tipoPessoa == 4){
 
                     mostrarPainelAluno(matriz);
                     reservaAluno(matriz);
@@ -313,6 +313,11 @@ void inicializa(char matriz[ROW][COL]){
      for(i=1;i<=ROW;i++)
        for(j=1;j<=COL;j++)
           matriz[i][j] = '.';
+          matriz [6][9] = 'P';
+          matriz [7][9] = 'P';
+          matriz [8][9] = 'P';
+          matriz [6][10] = 'P';
+          matriz [7][10] = 'P';
 }
 
 void mostrarPainelProf(char matriz[2][10]){
@@ -370,7 +375,7 @@ int menuOpcao(){
 }
 //apresenta  a legenda na tela
 void legenda(){
-   printf("\n\n\n        .-Livre  X-Ocupado  R-Reservado\n\n");
+   printf("\n\n\n        .-Livre  P-PNE  R-Reservado\n\n");
 
 }
     //efetica a compra da cadeira
