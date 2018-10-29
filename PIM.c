@@ -375,7 +375,7 @@ int linhaX(){
        }
    return row;
 }
-//ler a coluna oferecida pelo usuario
+//ler  coluna oferecida pelo usuario
 int colunaY(){
    int col;
    printf("          Coluna: "); scanf("%d",&col);
