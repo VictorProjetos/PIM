@@ -10,9 +10,12 @@
 #define TRUE 1
 
 void inicializa(char matriz[ROW][COL]);
-void mostrarPainel(char matriz[ROW][COL]);
+void mostrarPainelProf(char matriz[2][10]);
+void mostrarPainelAluno(char matriz[8][10]);
 void reservar(char matriz[ROW][COL]);
 void legenda();
+void reservarProfessores();
+void reservaAluno();
 int menuOpcao();
 int colunaY();
 int linhaX();
@@ -34,7 +37,7 @@ int main (void){
     do{
         system("cls");//Limpa a tela
         opcao=menuOpcao();
-
+        int tipoPessoa;
         switch(opcao){
             case 1: {
                 int tipoPessoa, esco = 2;
@@ -277,13 +280,24 @@ int main (void){
                 case 2:
                 system("cls");
                 system("cls");
-                mostrarPainel(matriz);
-                reservar(matriz); //Realiza a reserva de uma cadeira no painel, marcando c/ um R
+                printf("Voce deseja reservar uma cadeira para: \n \n1 - Professor \n2 - Convidado \n3 - Aluno \n4 - PNE:");
+                scanf("%d", &tipoPessoa);
+
+                if (tipoPessoa == 1 || tipoPessoa == 2 ){
+                    mostrarPainelProf(matriz);
+                    reservarProfessores(matriz); //Realiza a reserva de uma cadeira no painel, marcando c/ um R
+                } if (tipoPessoa == 3){
+
+                    mostrarPainelAluno(matriz);
+                    reservaAluno(matriz);
+
+                }
+
                 break;
                 case 3:
 
                 system("cls");
-                mostrarPainel(matriz);
+                //mostrarPainel(matriz);
                 getch();
                 break;
 
@@ -301,15 +315,30 @@ void inicializa(char matriz[ROW][COL]){
           matriz[i][j] = '.';
 }
 
-void mostrarPainel(char matriz[ROW][COL]){
+void mostrarPainelProf(char matriz[2][10]){
   int i,j;
   printf("\n\n         %c   PAINEL DE OCUPACOES   %c\n\n",16,17);
   printf("          ");
-  for(i=1;i<=COL;i++)
+  for(i=1;i<=10;i++)
     printf("%d     ",i);
-  for(i=1;i<=ROW;i++){
+  for(i=9;i<=10;i++){
      printf("\n\n     %d",i);
-     for(j=1;j<=COL;j++)
+     for(j=1;j<=10;j++)
+       printf("   (%c)",matriz[i][j]);
+  }
+  //apresenta o menu na tela
+  legenda();
+}
+
+void mostrarPainelAluno(char matriz[8][10]){
+  int i,j;
+  printf("\n\n         %c   PAINEL DE OCUPACOES   %c\n\n",16,17);
+  printf("          ");
+  for(i=1;i<=10;i++)
+    printf("%d     ",i);
+  for(i=1;i<=8;i++){
+     printf("\n\n     %d",i);
+     for(j=1;j<=10;j++)
        printf("   (%c)",matriz[i][j]);
   }
   //apresenta o menu na tela
@@ -347,7 +376,25 @@ void legenda(){
     //efetica a compra da cadeira
 
 //reserva a cadeira no teatro
-void reservar(char matriz[ROW][COL]){
+void reservarProfessores(char matriz[2][10]){
+   int row, col;
+    printf("\n\n         RESERVA DE CADEIRAS\n\n");
+   row = linhaX();
+   col = colunaY();
+
+   if(matriz[row][col]=='.'){
+       matriz[row][col] = 'R';
+       printf("\n\n      RESERVA EFETIVADA COM SUCESSO !!");
+   }
+   else if (matriz[row][col]=='X')
+             printf("\n\n      CADEIRA JA OCUPADA!! ESCOLHA OUTRA !!\n\n");
+        else if(matriz[row][col]=='R')
+               printf("\n\n      CADEIRA JA RESERVADA !! ESCOLHA OUTRA !!\n\n");
+
+    getch();
+
+}
+void reservaAluno(char matriz[8][10]){
    int row, col;
     printf("\n\n         RESERVA DE CADEIRAS\n\n");
    row = linhaX();
