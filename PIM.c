@@ -313,11 +313,11 @@ void inicializa(char matriz[ROW][COL]){
      for(i=1;i<=ROW;i++)
        for(j=1;j<=COL;j++)
           matriz[i][j] = '.';
-          matriz [6][9] = 'P';
-          matriz [7][9] = 'P';
-          matriz [8][9] = 'P';
-          matriz [6][10] = 'P';
-          matriz [7][10] = 'P';
+          matriz [6][9] = 'p';
+          matriz [7][9] = 'p';
+          matriz [8][9] = 'p';
+          matriz [6][10] = 'p';
+          matriz [7][10] = 'p';
 }
 
 void mostrarPainelProf(char matriz[2][10]){
@@ -387,7 +387,7 @@ void reservarProfessores(char matriz[2][10]){
    row = linhaX();
    col = colunaY();
 
-   if(matriz[row][col]=='.'){
+   if(matriz[row][col]=='.' ){
        matriz[row][col] = 'R';
        printf("\n\n      RESERVA EFETIVADA COM SUCESSO !!");
    }
@@ -405,7 +405,7 @@ void reservaAluno(char matriz[8][10]){
    row = linhaX();
    col = colunaY();
 
-   if(matriz[row][col]=='.'){
+   if(matriz[row][col]=='.' || matriz[row][col]=='p'){
        matriz[row][col] = 'R';
        printf("\n\n      RESERVA EFETIVADA COM SUCESSO !!");
    }
