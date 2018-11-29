@@ -51,10 +51,13 @@ int main (void) {
 
         case 2:
 
-            printf("Voce deseja reservar uma cadeira para: \n \n1 - Professor \n2 - Convidado \n3 - Aluno \n4 - PNE:\n");
-            scanf("%i",&tipoPessoa);
+            printf("Voce deseja reservar uma cadeira para: \n \n1 - Professor \n2 - Convidado \n3 - Aluno \n4 - PNE:\n \nopcao:");
+            scanf( "%i",&tipoPessoa);
             system("cls");
-           rg = verificar_rg(tipoPessoa); // chama função que verifica que o se o dono do rg foi registrado no sistema.
+             if (tipoPessoa == 1 || tipoPessoa == 2 || tipoPessoa == 3 || tipoPessoa == 4){
+
+
+                rg = verificar_rg(tipoPessoa); // chama função que verifica que o se o dono do rg foi registrado no sistema.
 
 
 
@@ -79,6 +82,12 @@ int main (void) {
                 } else {
                     reservaAluno(matriz,rg);
                 }
+
+            }
+            }
+            else{
+                        printf("Digite um valor valido !!! \n");
+                        system("pause");
 
             }
 
@@ -293,7 +302,7 @@ void sorteio() {
 int cadastro () {
 
     int tipoPessoa, esco = 2;
-    printf("Voce e: \n 1 - Professor \n 2 - Aluno \n 3 - Convidado \n 4 - Portador de necessidade especial \n 5 - sair \n");
+    printf("Voce e: \n 1 - Professor \n 2 - Aluno \n 3 - Convidado \n 4 - Portador de necessidade especial \n \n opcao: ");
     scanf("%i", &tipoPessoa);
     system("cls");
     switch(tipoPessoa) {
@@ -508,6 +517,10 @@ int cadastro () {
 
         break;
     }
+    default:
+        printf("Digite uma opcao valida \n \n");
+        system("pause");
+        break;
     }
 
 
@@ -730,7 +743,6 @@ int reservaAluno(char matriz[8][10], int rg) {
             printf("Erro %d : %s\n", mysql_errno(&conexao), mysql_error(&conexao));
         }
 
-        system("pause");
 
     }
 
